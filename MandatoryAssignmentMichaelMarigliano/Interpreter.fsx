@@ -10,8 +10,10 @@ let evaluateProgram (functionsList, argumentExpression) =
            | INT i                                       -> i
            | ADD (expression1, expression2)              -> evaluate environment expression1 + evaluate environment expression2
            | SUB (expression1, expression2)              -> evaluate environment expression1 - evaluate environment expression2
+           | MUL (expression1, expression2)              -> evaluate environment expression1 * evaluate environment expression2
+           | DIV (expression1, expression2)              -> evaluate environment expression1 / evaluate environment expression2
         evaluate [] argumentExpression
         
         
-let example = parseProgFromString "4+4+4-4"
+let example = parseProgFromString "4/4"
 evaluateProgram example
