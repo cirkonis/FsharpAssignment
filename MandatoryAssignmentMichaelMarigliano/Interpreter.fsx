@@ -1,9 +1,9 @@
 #load "Parser.fs"
-#load "Helpers.fs"
+#load "Helpers.fs" 
 open Parser
 open Helpers
 
-
+//Implementation of the Interpreter
 let evaluateProgram (functionsList, argumentExpression) =
         let rec evaluate environment = function
            | VAR x                                       -> lookup x environment
@@ -16,11 +16,23 @@ let evaluateProgram (functionsList, argumentExpression) =
            | EQ  (expression1, expression2)              -> if evaluate environment expression1 = evaluate environment expression2
                                                                 then evaluate environment (INT(1)) 
                                                                 else evaluate environment (INT(0))
-           | NEQ  (expression1, expression2)             -> if evaluate environment expression1 <> evaluate environment expression2
+           | NEQ (expression1, expression2)              -> if evaluate environment expression1 <> evaluate environment expression2
                                                                 then evaluate environment (INT(1)) 
-                                                                else evaluate environment (INT(0))                                                     
+                                                                else evaluate environment (INT(0))
+           | LT  (expression1, expression2)               -> if evaluate environment expression1 < evaluate environment expression2
+                                                                then evaluate environment (INT(1)) 
+                                                                else evaluate environment (INT(0))
+           | LE  (expression1, expression2)               -> if evaluate environment expression1 <= evaluate environment expression2
+                                                                then evaluate environment (INT(1)) 
+                                                                else evaluate environment (INT(0))
+           | GT  (expression1, expression2)               -> if evaluate environment expression1 > evaluate environment expression2
+                                                                then evaluate environment (INT(1)) 
+                                                                else evaluate environment (INT(0))
+           | GE  (expression1, expression2)               -> if evaluate environment expression1 >= evaluate environment expression2
+                                                                then evaluate environment (INT(1)) 
+                                                                else evaluate environment (INT(0))
         evaluate [] argumentExpression
         
         
-let example = parseProgFromString "4!=4"
+let example = parseProgFromString "4>=4"
 evaluateProgram example
