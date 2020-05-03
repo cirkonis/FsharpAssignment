@@ -663,7 +663,8 @@ let evaluateProgram (listOfFunctions, argumentExpression) =
 
 
 
-   //5.5 compiling for Condtional Expressions
+   //5.5 compiling for first order funcitons
+  
    let mutable labelCounter = 0;;
 
    let newLabel _ = 
