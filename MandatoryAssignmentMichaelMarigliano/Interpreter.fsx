@@ -4,7 +4,7 @@ open Parser
 open Helpers
 
 //Implementation of the Interpreter
-let evaluateProgram (functionsList, argumentExpression) =
+let evaluateProgram (functionList, argumentExpression) =
         let rec evaluate environment = function
            | VAR x                                       -> lookup x environment
            | INT i                                       -> i
@@ -41,9 +41,8 @@ let evaluateProgram (functionsList, argumentExpression) =
                                                              evaluate ((x, var) :: environment) expression2
            | IF  (expression1, expression2, expression3)  -> if evaluate environment expression1 = 1 
                                                              then evaluate environment expression2
-                                                             else evaluate environment expression3
+                                                             else evaluate environment expression3       
         evaluate [] argumentExpression
         
+let example = parseExpFromString "3 + 2"
         
-let example = parseProgFromString "let c = 7 in if c == 6 then 4 else 3"
-evaluateProgram example

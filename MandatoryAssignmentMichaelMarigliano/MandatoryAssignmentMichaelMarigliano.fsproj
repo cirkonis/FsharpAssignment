@@ -7,7 +7,6 @@
 
     <ItemGroup>
         <None Include="Exercise-Scripts\Language-Implementation-Exercises.fsx" />
-        <None Include="Compiler.fsx" />
         <None Include="Interpreter.fsx" />
         <Compile Include="Parser.fs" />
         <Compile Include="Helpers.fs" />
