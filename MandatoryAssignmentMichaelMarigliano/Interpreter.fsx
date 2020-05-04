@@ -54,5 +54,5 @@ let evaluateProgram (functionList, argumentExpression) =
         
 let example = parseProgFromString "let x = 15 in 4 + x * 7"
 let functionExample = parseProgFromString "func bigger(x, y) = if x > y then 6 else 4; bigger(2,4)"
-evaluateProgram example
-evaluateProgram functionExample
+let test1 = evaluateProgram example
+let test2 = evaluateProgram functionExample
