@@ -53,6 +53,12 @@ let evaluateProgram (functionList, argumentExpression) =
         evaluate [] argumentExpression
         
 let example = parseProgFromString "let x = 15 in 4 + x * 7"
-let functionExample = parseProgFromString "func bigger(x, y) = if x > y then 6 else 4; bigger(2,4)"
+let functionExample = parseProgFromString "func sum(x, y) = x + y; sum(1,2)"
 evaluateProgram example
 evaluateProgram functionExample
+(*
+let varnames  = ["x"; "y"]
+let values = [1; 2]
+let zippy = List.zip varnames values
+//this is what im trying to accomplish*)
+
