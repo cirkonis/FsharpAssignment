@@ -10,7 +10,6 @@
         <None Include="Interpreter.fsx" />
         <Compile Include="Parser.fs" />
         <Compile Include="Helpers.fs" />
-        <Compile Include="Compiler.fs" />
     </ItemGroup>
 
     <ItemGroup>
