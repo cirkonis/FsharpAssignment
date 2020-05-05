@@ -63,7 +63,13 @@ open Helpers
                                             compile functionEnvironment ("" :: environment) (expression2) @
                                             [IEQ] @
                                             [IEQ]
-                                            
+     | OR (expression1, expression2)    -> compile functionEnvironment environment (INT(0)) @
+                                            compile functionEnvironment ("" :: environment) (expression2) @
+                                            [IEQ] @
+                                            compile functionEnvironment ("" :: environment)(INT(1)) @
+                                            compile functionEnvironment ("" :: environment) (expression1) @
+                                            [IEQ] @
+                                            [ILE]                                       
      
      
      
@@ -88,13 +94,16 @@ let compileProgram (listOfFunctions, expression) =
                                                 [IRETN]
         compileFunctions listOfFunctions;;
  *)
+ (*
  ////TESTING AND and OR
  /// 
-    let testerMcTesterson = parseExpFromString "if 7==7 && 5==4 then 1 else 0"
+
     let andTest = compile [] [] (IF(AND(EQ(INT(7),INT(7)),EQ(INT(5),INT(4))),INT(1),INT(0)))
     let andTestAnswer = execProg andTest [] 
    
-   
+    let orTest = compile [] [] (IF(OR(EQ(INT(7),INT(6)),EQ(INT(5),INT(4))),INT(1),INT(0)))
+    let orTestAnswer = execProg orTest [] 
+   *)
    (*     
         ///////////////TESTING LT AND LE
         
