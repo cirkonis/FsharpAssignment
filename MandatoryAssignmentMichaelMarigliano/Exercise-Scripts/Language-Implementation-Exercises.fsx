@@ -285,7 +285,7 @@ let rec lookup x = function
    let compile2_3 = compile compileTimeEnvironment (ADD(ADD(VAR("pi"), VAR("a")),ADD(VAR("pi"),VAR("a"))));;
 
    execute compile2_3 runTimeStack;;
-   *)
+   
 
 
    //SECTION 3

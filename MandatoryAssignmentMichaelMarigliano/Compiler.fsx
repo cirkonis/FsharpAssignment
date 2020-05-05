@@ -27,7 +27,7 @@ open Helpers
      | VAR x                             -> [IGET (variablePosition x environment)]
      | LET (x, expression1, expression2) -> compile functionEnvironment environment         expression1 @
                                             compile functionEnvironment (x :: environment)  expression2 @
-                                            [ISWAP]                                 @
+                                            [ISWAP]@
                                             [IPOP]
      | EQ (expression1, expression2)     -> compile functionEnvironment environment         expression1 @
                                             compile functionEnvironment ("" :: environment) expression2 @
@@ -35,6 +35,18 @@ open Helpers
      | NEQ (expression1, expression2)    -> compile functionEnvironment environment (INT(1)) @
                                             compile functionEnvironment ("" :: environment) (EQ(expression1, expression2)) @
                                             [ISUB]
+     | LT (expression1, expression2)     -> compile functionEnvironment environment         expression1 @
+                                            compile functionEnvironment ("" :: environment) expression2 @
+                                            [ILT]
+     | LE (expression1, expression2)     -> compile functionEnvironment environment         expression1 @
+                                            compile functionEnvironment ("" :: environment) expression2 @
+                                            [ILE]
+     | GT (expression1, expression2)     -> compile functionEnvironment environment         expression2 @
+                                            compile functionEnvironment ("" :: environment) expression1 @
+                                            [ILT]
+     | GE (expression1, expression2)     -> compile functionEnvironment environment         expression2 @
+                                            compile functionEnvironment ("" :: environment) expression1 @
+                                            [ILE]
      | IF (expression1, expression2, expression3)    -> let label2 = newLabel()
                                                         let labele = newLabel()
                                                         compile functionEnvironment environment expression1 @
@@ -51,7 +63,7 @@ open Helpers
                                             [ILAB returnLabel]    @
                                             [ISWAP]               @
                                             [IPOP];;
-*)
+
 let compileProgram (listOfFunctions, expression) = 
         let functionEnvironment = List.map (fun (f, _) -> (f, newLabel())) listOfFunctions
         let rec compileFunctions = function
@@ -64,7 +76,23 @@ let compileProgram (listOfFunctions, expression) =
                                                 [ISWAP]                               @
                                                 [IRETN]
         compileFunctions listOfFunctions;;
+ *)       
+        
+        ///////////////TESTING LT AND LE
+        
+    let ltTest = compile [] [] (LT(INT(2),INT(1)))
+    let leTest = compile [] [] (LE(INT(2),INT(1)))
+    let gtTest = compile [] [] (GT(INT(2),INT(1)))
+    let geTest = compile [] [] (GE(INT(2),INT(1)))
 
+    let ltTestAnswer = execProg ltTest []
+    let leTestAnswer = execProg leTest []    
+    let gtTestAnswer = execProg gtTest []    
+    let geTestAnswer = execProg geTest []    
+        
+        
+        
+(*
 //use this to get most of the stuff to compile from the parser
    let addy = parseExpFromString "let x = 7 in 5+7+x"
    //examples of using the compiler with out functions 
@@ -79,3 +107,4 @@ let compileProgram (listOfFunctions, expression) =
    
    let neqTest = compile [] [] (NEQ(INT(1),INT(1)))
    let neqTestAnswer = execProg neqTest []
+   *)
