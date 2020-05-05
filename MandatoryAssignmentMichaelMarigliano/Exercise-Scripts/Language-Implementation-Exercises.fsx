@@ -178,7 +178,7 @@ let rec compile = function
  *)
 
 
- (*
+ 
 
  //SECTION 2
 
@@ -555,7 +555,7 @@ execute compile3_4_2 [];;
 //add in the interpreter equal and if lines-- did it before hand, interavtive window doesnt complain but no idea how to test as of now 
 *)
 
-
+(*
 //SECTION 5 Global First Order Functions..... first order - NOT higher order functions 
 
 //5.1 representing first order functions
@@ -729,4 +729,4 @@ let compileProgram (listOfFunctions, expression) =
                                                 [ISWAP]                               @
                                                 [IRETN]
         compileFunctions listOfFunctions;;
-                                                    
+   *)                                                 
