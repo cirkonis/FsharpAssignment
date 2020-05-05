@@ -56,6 +56,17 @@ open Helpers
                                                         [ILAB label2]                   @
                                                         compile functionEnvironment environment expression2 @
                                                         [ILAB labele]
+     | AND (expression1, expression2)    -> compile functionEnvironment environment (INT(1)) @
+                                            compile functionEnvironment ("" :: environment) (expression1) @
+                                            [IEQ] @
+                                            compile functionEnvironment ("" :: environment)(INT(1)) @
+                                            compile functionEnvironment ("" :: environment) (expression2) @
+                                            [IEQ] @
+                                            [IEQ]
+                                            
+     
+     
+     
 (*     |CALL (funkshun, expression)        -> let returnLabel = newLabel()
                                             let functionLabel = lookup funkshun functionEnvironment
                                             compile functionEnvironment environment expression @
@@ -76,8 +87,15 @@ let compileProgram (listOfFunctions, expression) =
                                                 [ISWAP]                               @
                                                 [IRETN]
         compileFunctions listOfFunctions;;
- *)       
-        
+ *)
+ ////TESTING AND and OR
+ /// 
+    let testerMcTesterson = parseExpFromString "if 7==7 && 5==4 then 1 else 0"
+    let andTest = compile [] [] (IF(AND(EQ(INT(7),INT(7)),EQ(INT(5),INT(4))),INT(1),INT(0)))
+    let andTestAnswer = execProg andTest [] 
+   
+   
+   (*     
         ///////////////TESTING LT AND LE
         
     let ltTest = compile [] [] (LT(INT(2),INT(1)))
@@ -92,7 +110,7 @@ let compileProgram (listOfFunctions, expression) =
         
         
         
-(*
+
 //use this to get most of the stuff to compile from the parser
    let addy = parseExpFromString "let x = 7 in 5+7+x"
    //examples of using the compiler with out functions 
