@@ -56,20 +56,18 @@ open Helpers
                                                         [ILAB label2]                   @
                                                         compile functionEnvironment environment expression2 @
                                                         [ILAB labele]
-     | AND (expression1, expression2)    -> compile functionEnvironment environment (INT(1)) @
+     | AND (expression1, expression2)    -> compile functionEnvironment environment (INT(2))@
                                             compile functionEnvironment ("" :: environment) (expression1) @
-                                            [IEQ] @
-                                            compile functionEnvironment ("" :: environment)(INT(1)) @
                                             compile functionEnvironment ("" :: environment) (expression2) @
-                                            [IEQ] @
+                                            [IADD]@
                                             [IEQ]
-     | OR (expression1, expression2)    -> compile functionEnvironment environment (INT(0)) @
-                                            compile functionEnvironment ("" :: environment) (expression2) @
-                                            [IEQ] @
-                                            compile functionEnvironment ("" :: environment)(INT(1)) @
+                                      
+                                 
+     | OR (expression1, expression2)    ->  compile functionEnvironment environment (INT(0)) @
                                             compile functionEnvironment ("" :: environment) (expression1) @
-                                            [IEQ] @
-                                            [ILE]                                       
+                                            compile functionEnvironment ("" :: environment) (expression2) @
+                                            [IADD] @
+                                            [ILT]                                       
      
      
      
