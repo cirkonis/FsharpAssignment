@@ -78,10 +78,23 @@ open Helpers
                                             [ILAB  labReturn] @
                                             [ISWAP] @
                                             [IPOP]
+                                            
  
- 
+    let compileProgram (listOfFunctions, expression) = 
+            let functionEnvironment = List.map (fun (f, _) -> (f, newLabel())) listOfFunctions
+            let rec compileFunctions = function
+              | []                               -> compile functionEnvironment [] expression @
+                                                    [IHALT]
+              | (f, (x, e)) :: listOfFunctions   -> let functionLabel = lookup f functionEnvironment
+                                                    compileFunctions listOfFunctions      @
+                                                    [ILAB functionLabel]@
+                                                    compile functionEnvironment ["";x] e  @
+                                                    [ISWAP]@
+                                                    [IRETN]
+            compileFunctions listOfFunctions
  
                                             
 //testing
-
+let compileTime = compileProgram([("f", ("x", ADD(INT 2, VAR "x")))], (CALL("f", [INT 5])))
+let lastChance = execProg compileTime
     
