@@ -67,13 +67,15 @@ open Helpers
                                             [ILT]
      | CALL (func, expression)          ->  let labReturn = newLabel()
                                             let labFunc = lookup func functionEnvironment
-                                            let rec loopy expression = 
-                                                      match expression with
-                                                      | [] -> []
-                                                      | e::exp -> 
-                                                         compile functionEnvironment ("" :: environment) e @
-                                                         loopy exp
-                                            loopy expression
+                                            let doom =
+                                                let rec loopy expression = 
+                                                          match expression with
+                                                          | [] -> []
+                                                          | e::exp -> 
+                                                             compile functionEnvironment ("" :: environment) e @
+                                                             loopy exp
+                                                loopy expression
+                                            doom @    
                                             [ICALL labFunc] @
                                             [ILAB  labReturn] @
                                             [ISWAP] @
