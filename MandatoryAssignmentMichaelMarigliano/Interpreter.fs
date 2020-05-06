@@ -1,8 +1,4 @@
-#load "Parser.fs"
-#load "Helpers.fs" 
-open Parser
-open Helpers
-
+module Interpreter
 //Implementation of the Interpreter
 
 let evaluateProgram (functionList, argumentExpression) =
@@ -51,8 +47,4 @@ let evaluateProgram (functionList, argumentExpression) =
                                                                      evaluate zippy body
                                                                 else failwith "Function must have params"
         evaluate [] argumentExpression
-        //TODO investigate and test using the loopy loop 
-let example = parseProgFromString "let x = 15 in 4 + x * 7"
-let functionExample = parseProgFromString "func bigger(x, y) = if x > y then 6 else 4; bigger(2,4)"
-let test1 = evaluateProgram example
-let test2 = evaluateProgram functionExample
+

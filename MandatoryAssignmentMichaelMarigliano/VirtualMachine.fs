@@ -25,7 +25,7 @@ type inst  = | IHALT
 
 let private get = List.item
 let rec private find l = function
-  | []               -> failwith "error execuing code"
+  | []               -> failwith "error executing code"
   | (ILAB l' :: ins) -> if l = l' then ins else find l ins
   | (_       :: ins) -> find l ins
   
