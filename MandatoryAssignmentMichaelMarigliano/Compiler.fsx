@@ -60,7 +60,7 @@ open Helpers
                                             compile functionEnvironment ("" :: environment) (expression2) @
                                             [IADD]@
                                             [IEQ]
-     | OR (expression1, expression2)    ->  compile functionEnvironment environment (INT(0)) @
+     | OR (expression1, expression2)    ->  compile functionEnvironment environment (INT(0)) @ //TODO try using ineq instead
                                             compile functionEnvironment ("" :: environment) (expression1) @
                                             compile functionEnvironment ("" :: environment) (expression2) @
                                             [IADD] @
