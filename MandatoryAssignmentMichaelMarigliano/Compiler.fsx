@@ -67,7 +67,7 @@ let rec compile functionEnvironment environment = function
                                         [ILT]
  | CALL (func, expression)          ->  let labReturn = newLabel()
                                         let labFunc = lookup func functionEnvironment
-                                        let doom =
+                                        let loop =
                                             let rec loopy expression = 
                                                       match expression with
                                                       | [] -> []
@@ -75,7 +75,7 @@ let rec compile functionEnvironment environment = function
                                                          compile functionEnvironment ("" :: environment) e @
                                                          loopy exp
                                             loopy expression
-                                        doom @    
+                                        loop @    
                                         [ICALL labFunc] @
                                         [ILAB  labReturn] @
                                         [ISWAP] @
