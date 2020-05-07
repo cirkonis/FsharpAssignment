@@ -1,75 +1,74 @@
-#load "Parser.fs"
-#load "Helpers.fs" 
+#load "Parser.fs" 
 open Parser
-open Helpers
 
-//Implementation of the Interpreter
+let rec lookup x = function
+| []                      -> failwith ("unbound: " + x)
+| (y, w) :: environment   -> if x = y then w else lookup x environment
 
-let evaluateProgram (functionList, argumentExpression) =
-    let rec evaluate environment = function
-       | VAR x                                       -> lookup x environment
-       | INT i                                       -> i
-       | ADD (expression1, expression2)              -> evaluate environment expression1 + evaluate environment expression2
-       | SUB (expression1, expression2)              -> evaluate environment expression1 - evaluate environment expression2
-       | MUL (expression1, expression2)              -> evaluate environment expression1 * evaluate environment expression2
-       | DIV (expression1, expression2)              -> evaluate environment expression1 / evaluate environment expression2
-       | NEG expression                              -> evaluate environment expression * (-1)
-       | EQ  (expression1, expression2)              -> if evaluate environment expression1 = evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | NEQ (expression1, expression2)              -> if evaluate environment expression1 <> evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | LT  (expression1, expression2)               -> if evaluate environment expression1 < evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | LE  (expression1, expression2)               -> if evaluate environment expression1 <= evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | GT  (expression1, expression2)               -> if evaluate environment expression1 > evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | GE  (expression1, expression2)               -> if evaluate environment expression1 >= evaluate environment expression2
-                                                            then evaluate environment (INT(1)) 
-                                                            else evaluate environment (INT(0))
-       | AND (expression1, expression2)               -> if evaluate environment expression1 = 1 && evaluate environment expression2 = 1
-                                                            then evaluate environment (INT(1))
-                                                            else evaluate environment (INT(0))
-       | OR  (expression1, expression2)               -> if evaluate environment expression1 = 1 || evaluate environment expression2 = 1
-                                                            then evaluate environment (INT(1))
-                                                            else evaluate environment (INT(0))
-       | LET (x, expression1, expression2)            -> let var = evaluate environment expression1
-                                                         evaluate ((x, var) :: environment) expression2
-       | IF  (expression1, expression2, expression3)  -> if evaluate environment expression1 = 1 
-                                                         then evaluate environment expression2
-                                                         else evaluate environment expression3
-       //funkshun = function :) 
-       | CALL (funkshun, expression)                  -> if expression.Length <> 0
-                                                             then
-                                                             let values = List.map(fun v -> evaluate environment v) expression
-                                                             let (varnames, body) = lookup funkshun functionList
-                                                             let zippy = List.zip varnames values
-                                                             evaluate zippy body
-                                                         else failwith "Function must have params"
+let evalProg (funcs, exp) =
+    let rec eval env = function
+       | INT i                         -> i
+       | NEG exp                       -> eval env exp * (-1)
+       | ADD (exp1, exp2)              -> eval env exp1 + eval env exp2
+       | SUB (exp1, exp2)              -> eval env exp1 - eval env exp2
+       | MUL (exp1, exp2)              -> eval env exp1 * eval env exp2
+       | DIV (exp1, exp2)              -> eval env exp1 / eval env exp2
+       | EQ  (exp1, exp2)              -> if eval env exp1 = eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | NEQ (exp1, exp2)              -> if eval env exp1 <> eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | LT  (exp1, exp2)               -> if eval env exp1 < eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | LE  (exp1, exp2)               -> if eval env exp1 <= eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | GT  (exp1, exp2)               -> if eval env exp1 > eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | GE  (exp1, exp2)               -> if eval env exp1 >= eval env exp2
+                                            then eval env (INT(1)) 
+                                            else eval env (INT(0))
+       | AND (exp1, exp2)               -> if eval env exp1 = 1 && eval env exp2 = 1
+                                            then eval env (INT(1))
+                                            else eval env (INT(0))
+       | OR  (exp1, exp2)               -> if eval env exp1 = 1 || eval env exp2 = 1
+                                            then eval env (INT(1))
+                                            else eval env (INT(0))
+       | VAR x                          -> lookup x env
+       | LET (x, exp1, exp2)            -> let var = eval env exp1
+                                           eval ((x, var) :: env) exp2
+       | IF  (exp1, exp2, exp3)         -> if eval env exp1 = 1 
+                                            then eval env exp2
+                                            else eval env exp3
+       | CALL (func, exp)               -> if exp.Length <> 0
+                                             then
+                                             let vals = List.map(fun x -> eval env x) exp
+                                             let (vars, body) = lookup func funcs
+                                             let varVals = List.zip vars vals
+                                             eval varVals body
+                                           else failwith "No Arguments"
                                                       
 
-    evaluate [] argumentExpression
-//Testing
-let testAdd = evaluateProgram(parseProgFromString "2+2") //Should be 4
-let testSub = evaluateProgram(parseProgFromString "2-2") //Should be 0
-let testMul = evaluateProgram(parseProgFromString "2*3") //Should be 6
-let testDiv = evaluateProgram(parseProgFromString "2/2") //Should be 1
-let testNeg = evaluateProgram(parseProgFromString "-2") //Should be -2
-let testEq = evaluateProgram(parseProgFromString "2==2") //Should be True
-let testNeq = evaluateProgram(parseProgFromString "2!=2") //Should be False
-let testLt = evaluateProgram(parseProgFromString "2<2") //Should be Talse
-let testLe = evaluateProgram(parseProgFromString "2<=2") //Should be True
-let testGt = evaluateProgram(parseProgFromString "3>2") //Should be True
-let testGe = evaluateProgram(parseProgFromString "1>=2") //Should be False
-let testIfAnd = evaluateProgram(parseProgFromString "if(2==2 && 3==3) then 1 else 0") //Should be True
-let testIfOr = evaluateProgram(parseProgFromString "if(2==5 || 3==3) then 1 else 0") //Should be True 
-let testSingleArgFunctionFactorial = evaluateProgram(parseProgFromString "func fac(n) =  if n > 0 then  n * fac(n - 1)else 1;fac(5)")
-let testLet = evaluateProgram(parseProgFromString "let x = 15 in 4 + x * 7") //Should be ABiggerNumber than x
-let testFfunctionMultipleArgs = evaluateProgram(parseProgFromString "func bigger(x, y) = if x > y then 1 else 0; bigger(2,4)") //Should be False(0)
+    eval [] exp
+
+let Add = evalProg(parseProgFromString "1+1") 
+let Sub = evalProg(parseProgFromString "1-2") 
+let Mul = evalProg(parseProgFromString "2*2") 
+let Div = evalProg(parseProgFromString "0/5") 
+let Neg = evalProg(parseProgFromString "-1") 
+let Eq = evalProg(parseProgFromString "1==1") 
+let Neq = evalProg(parseProgFromString "1!=1") 
+let Lt = evalProg(parseProgFromString "1<2") 
+let Le = evalProg(parseProgFromString "2<=2") 
+let Gt = evalProg(parseProgFromString "1>2") 
+let Ge = evalProg(parseProgFromString "1>=2") 
+let IfWithAnd = evalProg(parseProgFromString "if(1==1 && 1==1) then 1 else 0") 
+let IfWithOr = evalProg(parseProgFromString "if(1==2 || 1==1) then 1 else 0")
+let Let = evalProg(parseProgFromString "let x = 1 in 1 + x - 1") 
+let Factorial = evalProg(parseProgFromString "func fac(n) =  if n > 0 then  n * fac(n - 1)else 1;fac(3)")
+let MultipleParams = evalProg(parseProgFromString "func sum(x, y) = x + y; sum(1,1)") 
 
 
