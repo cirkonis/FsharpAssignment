@@ -65,8 +65,8 @@ let rec compile functionEnvironment environment = function
                                         compile functionEnvironment ("" :: environment) (expression2) @
                                         [IADD] @
                                         [ILT]
- | CALL (func, expression)          ->  let labReturn = newLabel()
-                                        let labFunc = lookup func functionEnvironment
+ | CALL (funkshun, expression)      ->  let labReturn = newLabel()
+                                        let labFunc = lookup funkshun functionEnvironment
                                         let loop =
                                             let rec loopy expression = 
                                                       match expression with
